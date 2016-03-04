@@ -1,0 +1,16 @@
+[data-component="carousel"] {
+  overflow: hidden;
+  position: relative; }
+  [data-component="carousel"] > ul {
+    bottom: 0;
+    overflow: hidden;
+    position: absolute; }
+    [data-component="carousel"] > ul > li {
+      float: left;
+      list-style: none; }
+  [data-component="carousel"] > div {
+    overflow: hidden; }
+    [data-component="carousel"] > div > section {
+      float: left; }
+
+/*# sourceMappingURL=joose-carousel.css.map */

@@ -1,0 +1,19 @@
+[data-component="carousel"] {
+    overflow:hidden;
+    position:relative;
+    > ul {
+        bottom:0;
+        overflow:hidden;
+        position:absolute;
+        > li {
+            float:left;
+            list-style:none;
+        }
+    }
+    > div {
+        overflow:hidden;
+        > section {
+            float:left;
+        }
+    }
+}

@@ -2,12 +2,18 @@
   overflow: hidden;
   position: relative; }
   [data-component="carousel"] > ul {
+    background: white;
     bottom: 0;
+    left: 50%;
+    margin-left: -246px;
     overflow: hidden;
     position: absolute; }
     [data-component="carousel"] > ul > li {
       float: left;
       list-style: none; }
+    [data-component="carousel"] > ul a {
+      display: block;
+      padding: 10px; }
   [data-component="carousel"] > div {
     overflow: hidden; }
     [data-component="carousel"] > div > section {

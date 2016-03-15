@@ -32,7 +32,8 @@ joose.carousel = (function(js) {
 
         // store the pagination links
         this.paginationLinks = document.querySelectorAll('#' + this.carouselId + ' > ul a');
-        this.noOfPages = this.paginationLinks.length - 2; // don't count previous and next page links
+        this.noOfPaginationLinks = this.paginationLinks.length;
+        this.noOfPages = this.noOfPaginationLinks - 2; // don't count previous and next page links
 
         // store other details
         this.pagesContainer = this.container.querySelector('#' + this.carouselId + ' > div');
@@ -49,28 +50,32 @@ joose.carousel = (function(js) {
         // open the relevant page
         showPage: function(pageId) {
             
-            // get the page to open and it's trigger
-            var pageTrigger = this.container.querySelector('[href="#' + this.carouselId + '"]');
-            var pageToShow = this.container.querySelector('#' + this.carouselId);
+            // get the page to open and it's trigger and page number
+            var pageTrigger = this.container.querySelector('[href="#' + pageId + '"]');
+            var pageToShow = this.container.querySelector('#' + pageId);
+            var pageNumber = pageToShow.getAttribute('data-page-number');
 
             // if the page exists
             if (pageToShow) {
 
                 // 'scroll' to the selected page; add class to trigger's parent for styling flexibility
-                joose.utils.addClass(tabTrigger.parentNode, config.expandedClassForTrigger);
-                joose.utils.addClass(tabToOpen,  config.expandedClassForContent);
-                // tabToOpen.style.marginLeft = 0 + 'px';
+                joose.utils.addClass(pageTrigger.parentNode, config.expandedClassForTrigger);
+                joose.utils.addClass(pageToShow, config.expandedClassForContent);
+                this.pagesContainer.style.marginLeft = '-' + ((pageNumber - 1) * this.pageWidth) + 'px';
 
             }
         },
 
         // bind click event to triggers to open relevant page
         bindEvents: function() {
-            for (var i=0; i<this.noOfTabs; i++) {
-                var tabs = this;
-                this.triggers[i].addEventListener('click', function(e) {
+            var carousel = this;
+            
+            // skip the prev / next links
+            for (var i=2; i<this.noOfPaginationLinks; i++) {
+                this.paginationLinks[i].setAttribute('data-page-number', i+1);
+                this.paginationLinks[i].addEventListener('click', function(e) {
                     e.preventDefault();
-                    tabs.openTab(this.getAttribute('aria-controls'));
+                    carousel.showPage(this.getAttribute('aria-controls'));
                 });
             }
         },
@@ -84,22 +89,24 @@ joose.carousel = (function(js) {
             };
 
             // style the carousel (needs to be calculated dynamically)
-            var pageWidth = (this.pagesContainer.clientWidth / this.noOfPagesShown);
-            this.pagesContainer.style.width = (pageWidth * this.noOfPages) + 'px';
+            this.pageWidth = (this.pagesContainer.clientWidth / this.noOfPagesShown);
+            this.pagesContainer.style.width = (this.pageWidth * this.noOfPages) + 'px';
             var pages = this.pagesContainer.querySelectorAll('[aria-labelledby]');
 
             for (var i=0; i<this.noOfPages; i++) {
-                pages[i].style.width = (pageWidth / this.noOfPagesShown) + 'px';
+                pages[i].style.width = (this.pageWidth / this.noOfPagesShown) + 'px';
+                pages[i].setAttribute('data-page-number', i+1);
             }
 
             // bind events to this instance of a carousel
             this.bindEvents();
 
             // get the default page href
-            var defaultPageIdWithHash = this.paginationLinks[this.defaultPage + 2].href; // plus 2 to account for previous / next page links
+            //var defaultPageIdWithHash = this.paginationLinks[this.defaultPage + 1].href; // plus 2 to account for previous / next page links
 
             // show default page; chrome uses absolute url with hash, hence search
-            this.showPage(defaultPageIdWithHash.substring(defaultPageIdWithHash.search('#') + 1));
+            //not working
+            // this.showPage(defaultPageIdWithHash.substring(defaultPageIdWithHash.search('#') + 2));
         }
     };
 

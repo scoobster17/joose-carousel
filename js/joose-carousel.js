@@ -97,6 +97,7 @@ joose.carousel = (function(js) {
                 // add event to change page
                 this.paginationLinks[i].addEventListener('click', function(e) {
                     e.preventDefault();
+                    if (this.getAttribute('aria-disabled') === 'true') return false;
                     carousel.showPage(this.getAttribute('aria-controls'));
                     carousel.updatePrevNextPaginationLinks.call(carousel, parseInt(this.getAttribute('data-page-number')));
                 });
@@ -106,9 +107,32 @@ joose.carousel = (function(js) {
         // update the prev / next page pagination links details based on the page shown
         updatePrevNextPaginationLinks: function(pageNo) {
 
-            // get the page numbers of the prev / next pages
-            var prevPageNumber = (pageNo-1 < 1) ? this.noOfPages : pageNo-1;
-            var nextPageNumber = (pageNo+1 > this.noOfPages) ? 1 : pageNo+1;
+            var prevPageNumber;
+            var nextPageNumber;
+
+            // get the page number of the previous page and decide whether to disable link if required
+            if (pageNo-1 < 1) {
+                prevPageNumber = this.noOfPages;
+                if (!this.continuousScroll) {
+                    this.prevLink.setAttribute('aria-disabled', 'true');
+                }
+            } else {
+                prevPageNumber = pageNo-1;
+                if (!this.continuousScroll) {
+                    this.prevLink.removeAttribute('aria-disabled');
+                }
+            }
+            if (pageNo+1 > this.noOfPages) {
+                nextPageNumber = 1;
+                if (!this.continuousScroll) {
+                    this.nextLink.setAttribute('aria-disabled', 'true');
+                }
+            } else {
+                nextPageNumber = pageNo+1;
+                if (!this.continuousScroll) {
+                    this.nextLink.removeAttribute('aria-disabled');
+                }
+            }
 
             // get the prev / next page elements
             var prevPage = this.container.querySelector('section[data-page-number="' + prevPageNumber + '"]');

@@ -14,6 +14,8 @@
     [data-component="carousel"] > ul a {
       display: block;
       padding: 10px; }
+    [data-component="carousel"] > ul [aria-disabled] {
+      color: grey; }
   [data-component="carousel"] > div {
     overflow: hidden; }
     [data-component="carousel"] > div > section {

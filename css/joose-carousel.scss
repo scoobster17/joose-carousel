@@ -17,6 +17,9 @@
             display:block;
             padding:10px;
         }
+        [aria-disabled] {
+            color:grey;
+        }
     }
     > div {
         overflow:hidden;

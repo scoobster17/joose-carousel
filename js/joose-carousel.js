@@ -34,6 +34,8 @@ joose.carousel = (function(js) {
         this.paginationLinks = document.querySelectorAll('#' + this.carouselId + ' > ul a');
         this.noOfPaginationLinks = this.paginationLinks.length;
         this.noOfPages = this.noOfPaginationLinks - 2; // don't count previous and next page links
+        this.prevLink = this.paginationLinks[0];
+        this.nextLink = this.paginationLinks[1];
 
         // store other details
         this.pagesContainer = this.container.querySelector('#' + this.carouselId + ' > div');
@@ -100,26 +102,25 @@ joose.carousel = (function(js) {
         // update the prev / next page pagination links details based on the page shown
         updatePrevNextPaginationLinks: function(pageNo) {
 
-            var prevLink = this.paginationLinks[0];
-            var nextLink = this.paginationLinks[1];
-
+            // get the page numbers of the prev / next pages
             var prevPageNumber = (pageNo-1 < 1) ? this.noOfPages : pageNo-1;
             var nextPageNumber = (pageNo+1 > this.noOfPages) ? 1 : pageNo+1;
 
+            // get the prev / next page elements
             var prevPage = this.container.querySelector('section[data-page-number="' + prevPageNumber + '"]');
             var nextPage = this.container.querySelector('section[data-page-number="' + nextPageNumber + '"]');
 
+            // get the id's of the prev / next pages
             var prevPageId = prevPage.getAttribute('id');
             var nextPageId = nextPage.getAttribute('id');
 
-            prevLink.setAttribute('data-page-number', prevPageNumber);
-            nextLink.setAttribute('data-page-number', nextPageNumber);
-
-            prevLink.setAttribute('href','#' + prevPageId);
-            nextLink.setAttribute('href','#' + nextPageId);
-
-            prevLink.setAttribute('aria-controls', prevPageId);
-            nextLink.setAttribute('aria-controls', nextPageId);
+            // set the page number, the href and the aria-controls attributes for prev / next links
+            this.prevLink.setAttribute('data-page-number', prevPageNumber);
+            this.nextLink.setAttribute('data-page-number', nextPageNumber);
+            this.prevLink.setAttribute('href','#' + prevPageId);
+            this.nextLink.setAttribute('href','#' + nextPageId);
+            this.prevLink.setAttribute('aria-controls', prevPageId);
+            this.nextLink.setAttribute('aria-controls', nextPageId);
         },
 
         // initialise the carousel
@@ -140,18 +141,20 @@ joose.carousel = (function(js) {
                 this.pages[i].setAttribute('data-page-number', i+1);
             }
 
-            // initialise the prev / next page link values
-            this.updatePrevNextPaginationLinks(this.defaultPage);
-
             // bind events to this instance of a carousel
             this.bindEvents();
 
             // get the default page href
-            //var defaultPageIdWithHash = this.paginationLinks[this.defaultPage + 1].href; // plus 2 to account for previous / next page links
+            var defaultPageIdWithHash = this.paginationLinks[this.defaultPage + 1].href; // plus 2 to account for previous / next page links
+
+            // remove any part of a URL before the hash
+            var defaultPageId = defaultPageIdWithHash.substring(defaultPageIdWithHash.indexOf('#') + 1);
 
             // show default page; chrome uses absolute url with hash, hence search
-            //not working
-            // this.showPage(defaultPageIdWithHash.substring(defaultPageIdWithHash.search('#') + 2));
+            this.showPage(defaultPageId);
+
+            // initialise the prev / next page link values
+            this.updatePrevNextPaginationLinks(this.defaultPage);
         }
     };
 

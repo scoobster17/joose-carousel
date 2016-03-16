@@ -90,6 +90,11 @@ joose.carousel = (function(js) {
             }, carousel.pageChangeDelay);
         },
 
+        // stop auto-scroll, e.g. if want to play a video on a tab
+        stopTimedShowPage: function() {
+            clearTimeout(this.pageChangeTimeout);
+        },
+
         // bind click event to triggers to open relevant page
         bindEvents: function() {
             var carousel = this;

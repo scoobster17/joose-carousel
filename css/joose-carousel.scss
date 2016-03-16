@@ -23,6 +23,7 @@
     }
     > div {
         overflow:hidden;
+        transition: margin-left 1s ease-in-out; // needs vendor-prefixes
         > section {
             float:left; // required only for horizontal carousel; remove for vertical
         }

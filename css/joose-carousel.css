@@ -17,7 +17,8 @@
     [data-component="carousel"] > ul [aria-disabled] {
       color: grey; }
   [data-component="carousel"] > div {
-    overflow: hidden; }
+    overflow: hidden;
+    transition: margin-left 1s ease-in-out; }
     [data-component="carousel"] > div > section {
       float: left; }
 

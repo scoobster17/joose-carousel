@@ -43,6 +43,7 @@ joose.carousel = (function(js) {
         this.noOfPagesShown = this.container.getAttribute('data-pages-shown') || 1;
         this.horizontalCarousel = this.container.getAttribute('data-horizontal-carousel') === 'false' ? false : true;
         this.continuousScroll = this.container.getAttribute('data-continuous-scroll') === 'false' ? false : true;
+        this.pageChangeDelay = this.container.getAttribute('data-page-change-delay');
 
         // perform initial setup of the carousel
         this.init();
@@ -80,6 +81,15 @@ joose.carousel = (function(js) {
             }
         },
 
+        // used to show the next page automatically as a timed event
+        timedShowPage: function () {
+            var carousel = this;
+            carousel.pageChangeTimeout = setTimeout(function() {
+                carousel.nextLink.click();
+                carousel.timedShowPage();
+            }, carousel.pageChangeDelay);
+        },
+
         // bind click event to triggers to open relevant page
         bindEvents: function() {
             var carousel = this;
@@ -101,6 +111,19 @@ joose.carousel = (function(js) {
                     carousel.showPage(this.getAttribute('aria-controls'));
                     carousel.updatePrevNextPaginationLinks.call(carousel, parseInt(this.getAttribute('data-page-number')));
                 });
+            }
+
+            // if a delay has been supplied, create auto-scrolling carousel
+            if (this.pageChangeDelay !== null) {
+                this.pageChangeDelay = parseInt(this.pageChangeDelay);
+                if (this.pageChangeDelay + '' !== 'NaN') {
+
+                    // convert the delay to milliseconds
+                    this.pageChangeDelay = this.pageChangeDelay * 1000;
+
+                    // start timeout loop
+                    carousel.timedShowPage();
+                }
             }
         },
 

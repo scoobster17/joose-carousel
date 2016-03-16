@@ -123,8 +123,10 @@ joose.carousel = (function(js) {
                 this.pageChangeDelay = parseInt(this.pageChangeDelay);
                 if (this.pageChangeDelay + '' !== 'NaN') {
 
-                    // convert the delay to milliseconds
-                    this.pageChangeDelay = this.pageChangeDelay * 1000;
+                    // convert the delay to milliseconds after taking into account any CSS transitions
+                    var transitionDelay = parseInt(getComputedStyle(this.pagesContainer).transitionDuration);
+                    if (typeof transitionDelay !== 'number' || transitionDelay + '' === 'NaN') transitionDelay = 0;
+                    this.pageChangeDelay = (this.pageChangeDelay + transitionDelay) * 1000;
 
                     // start timeout loop
                     carousel.timedShowPage();
